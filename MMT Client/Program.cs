@@ -16,39 +16,48 @@ namespace MMT_Client
 
         static async Task RunAsync()
         {
-            IProductResult productResult = null;
-            ICategoryResult categoryResult = null;
-            HttpResponseMessage response = new HttpResponseMessage();
-            DisplayResult displayResult = DisplayResult.AllCategory; //By default, change for different report
 
-            using (var client = new HttpClient())
+            try
             {
-                //------Code  Start to  test Web API-------
+                IProductResult productResult = null;
+                ICategoryResult categoryResult = null;
+                HttpResponseMessage response = new HttpResponseMessage();
+                DisplayResult displayResult = DisplayResult.AllCategory; //Cchange for different report
 
-                client.BaseAddress = new Uri("https://localhost:44384/");
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                switch (displayResult)
+                using (var client = new HttpClient())
                 {
-                    case DisplayResult.AllProduct:
-                        productResult = new ShowAllProduct();
-                        response = await client.GetAsync("api/product");
-                        productResult.Display(response);
-                        break;
-                    case DisplayResult.ProductByCategory:
-                        productResult = new ShowByCategoryId();
-                        response = await client.GetAsync("api/category/1/product"); //Default categoryid set to 1
-                        productResult.Display(response);
-                        break;
-                    case DisplayResult.AllCategory:
-                        categoryResult = new ShowAllCategory();
-                        response = await client.GetAsync("api/category");
-                        categoryResult.Display(response);
-                        break;
-                }
+                    //------Code  Start to  test Web API-------
 
+                    client.BaseAddress = new Uri("https://localhost:44384/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    switch (displayResult)
+                    {
+                        case DisplayResult.AllProduct:
+                            productResult = new ShowAllProduct();
+                            response = await client.GetAsync("api/product");
+                            productResult.Display(response);
+                            break;
+                        case DisplayResult.ProductByCategory:
+                            productResult = new ShowByCategoryId();
+                            response = await client.GetAsync("api/category/1/product"); //Default categoryid set to 1
+                            productResult.Display(response);
+                            break;
+                        case DisplayResult.AllCategory:
+                            categoryResult = new ShowAllCategory();
+                            response = await client.GetAsync("api/category");
+                            categoryResult.Display(response);
+                            break;
+                    }
+
+                }
             }
+            catch(Exception ex)
+            {
+                Console.WriteLine("There is some error/exception:: {0}", ex.Message);
+            }
+            
         }
     }
 }
